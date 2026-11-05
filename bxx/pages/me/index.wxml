@@ -1,0 +1,7 @@
+<view class="page-shell">
+  <view class="profile-card"><image class="avatar" src="/assets/logo.png" mode="aspectFill"></image><view><view class="profile-name">同学</view><view class="profile-copy">北京化工大学 · 20XXXXXXXX</view></view></view>
+  <view class="stats"><view><text>{{courseCount}}</text><label>课程</label></view><view><text>{{noteCount}}</text><label>记事</label></view><view><text>{{historyCount}}</text><label>对话</label></view></view>
+  <view class="section-title">通用</view><view class="card"><view class="row" bindtap="openSettings"><view class="row-main"><view class="row-title">课表设置</view><view class="row-copy">学期、周数与节次时间</view></view><text class="chevron">›</text></view><view class="row" bindtap="showAbout"><view class="row-main"><view class="row-title">关于百小鸮</view><view class="row-copy">小程序能力说明与隐私边界</view></view><text class="chevron">›</text></view></view>
+  <view class="section-title">本机数据</view><view class="card"><view class="row danger-row" bindtap="clearMiniData"><view class="row-main"><view class="row-title">删除记事与对话历史</view><view class="row-copy">不影响课表和课表设置</view></view></view></view>
+  <view class="privacy">课表、记事和小鸮历史保存在微信本地存储。当前小程序版没有接入账号云同步，也不会读取或保存教务系统密码。</view>
+</view>

@@ -1,0 +1,9 @@
+<view class="page-shell">
+  <view class="card form-card">
+    <view class="field"><text>标题</text><input value="{{draft.title}}" data-field="title" bindinput="update" maxlength="40" placeholder="例如：完成高数作业" /></view>
+    <view class="field"><text>内容</text><textarea value="{{draft.content}}" data-field="content" bindinput="update" maxlength="500" auto-height placeholder="补充说明（选填）" /></view>
+    <view class="field"><text>时间备注</text><input value="{{draft.remindAt}}" data-field="remindAt" bindinput="update" maxlength="40" placeholder="例如：周五 18:00 前" /></view>
+  </view>
+  <button class="primary-button" bindtap="save">保存记事</button>
+  <view class="footnote">小程序暂不承诺后台准时通知；时间会保存在记事中供查看。</view>
+</view>

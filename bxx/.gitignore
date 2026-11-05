@@ -1,0 +1,9 @@
+node_modules/
+.runtime/
+miniprogram_npm/
+.DS_Store
+Thumbs.db
+project.private.config.json
+debug/
+tests/fixtures/
+*.pdf

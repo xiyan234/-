@@ -1,0 +1,44 @@
+{
+  "appid": "wxYOUR_APPID_HERE",
+  "projectname": "baixiaoxiao-campus-assistant",
+  "description": "百小鸮 高校校园学习生活一站式智能助手微信小程序版",
+  "compileType": "miniprogram",
+  "libVersion": "3.9.2",
+  "setting": {
+    "es6": true,
+    "enhance": true,
+    "postcss": true,
+    "minified": true,
+    "urlCheck": true,
+    "compileWorklet": false,
+    "uglifyFileName": false,
+    "uploadWithSourceMap": true,
+    "packNpmManually": false,
+    "packNpmRelationList": [],
+    "minifyWXSS": true,
+    "minifyWXML": true,
+    "localPlugins": false,
+    "disableUseStrict": false,
+    "useCompilerPlugins": false,
+    "condition": false,
+    "babelSetting": {
+      "ignore": [],
+      "disablePlugins": [],
+      "outputPath": ""
+    }
+  },
+  "simulatorType": "wechat",
+  "condition": {},
+  "simulatorPluginLibVersion": {},
+  "packOptions": {
+    "ignore": [
+      { "type": "folder", "value": "tests" },
+      { "type": "file", "value": "README.md" },
+      { "type": "file", "value": "LICENSE" },
+      { "type": "file", "value": "package.json" },
+      { "type": "file", "value": ".gitignore" }
+    ],
+    "include": []
+  },
+  "editorSetting": {}
+}

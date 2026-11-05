@@ -1,0 +1,129 @@
+<view class="import-page">
+  <view class="mode-switch">
+    <view class="mode-item active">教务系统导入</view>
+    <view class="mode-item" bindtap="openPdfImport">PDF 导入</view>
+  </view>
+
+  <view class="hero">
+    <view class="hero-title">从教务系统导入课表</view>
+    <view class="hero-copy">登录一次正方教务系统，自动读取本学期课表，不用一门一门手动添加。</view>
+    <view class="privacy-note">
+      <text class="privacy-mark">隐私</text>
+      <text class="privacy-text">学号与密码只在本机内存中使用，直接提交给学校教务系统完成登录。不上传、不保存、不写入任何日志，导入结束后立即清除。</text>
+    </view>
+  </view>
+
+  <view class="form-card">
+    <view class="field">
+      <text class="field-label">学号</text>
+      <input class="field-input" value="{{username}}" bindinput="updateUsername" placeholder="请输入教务系统学号" placeholder-class="placeholder" />
+    </view>
+
+    <view class="field">
+      <text class="field-label">密码</text>
+      <view class="field-row">
+        <input class="field-input" value="{{password}}" bindinput="updatePassword" password="{{!showPassword}}" placeholder="教务系统登录密码" placeholder-class="placeholder" />
+        <text class="field-action" bindtap="togglePassword">{{showPassword ? '隐藏' : '显示'}}</text>
+      </view>
+    </view>
+
+    <view class="field">
+      <text class="field-label">学期</text>
+      <picker mode="selector" range="{{semesterLabels}}" value="{{semesterIndex}}" bindchange="changeSemester">
+        <view class="picker-value">
+          <text>{{termLabel}}</text>
+          <text class="chevron">›</text>
+        </view>
+      </picker>
+    </view>
+
+    <view class="advanced-toggle" bindtap="toggleAdvanced">
+      <text>{{showAdvanced ? '收起高级设置' : '高级设置（教务地址）'}}</text>
+    </view>
+    <view wx:if="{{showAdvanced}}" class="advanced">
+      <input class="field-input mono" value="{{address}}" bindinput="updateAddress" placeholder="https://jwglxt.buct.edu.cn/jwglxt/xtgl/login_slogin.html" placeholder-class="placeholder" />
+      <text class="advanced-hint">默认已填好本校地址，正常情况下不需要修改。</text>
+    </view>
+
+    <button class="primary-button import-button" bindtap="startImport" disabled="{{loading}}">
+      {{loading ? loadingText : '开始导入'}}
+    </button>
+  </view>
+
+  <view wx:if="{{error}}" class="error-card">
+    <view class="error-title">导入没有完成</view>
+    <view class="error-copy">{{error}}</view>
+    <view wx:if="{{errorKind === 'DOMAIN_BLOCKED'}}" class="error-steps">
+      <text class="error-step">1. 打开微信公众平台 → 开发 → 开发管理 → 开发设置</text>
+      <text class="error-step">2. 找到「服务器域名」→ 修改 → request 合法域名</text>
+      <text class="error-step">3. 添加 https://jwglxt.buct.edu.cn 并保存</text>
+      <text class="error-step">4. 回到微信开发者工具点一次「编译」再试</text>
+    </view>
+    <view wx:if="{{errorKind === 'NO_SESSION_COOKIE' || errorKind === 'COOKIE_BLOCKED' || errorKind === 'METHOD_LOST'}}" class="error-steps">
+      <text class="error-step">1. 点开发者工具上方「预览」，用手机微信扫码</text>
+      <text class="error-step">2. 手机上打开小程序，重新走一次导入</text>
+      <text class="error-step">3. 手机浏览器里的教务系统请先退出，避免会话互斥</text>
+    </view>
+    <view wx:if="{{errorKind === 'LOGIN_BOUNCED'}}" class="error-steps">
+      <text class="error-step">1. 先别再点导入了，每次都会加重锁定</text>
+      <text class="error-step">2. 用电脑浏览器「无痕窗口」登录一次教务，确认密码能不能过</text>
+      <text class="error-step">3. 能登上就说明密码没问题，等 30 分钟后再回来导入</text>
+    </view>
+    <view wx:if="{{errorKind === 'SESSION_LOST_ON_POST'}}" class="error-steps">
+      <text class="error-step">1. 退出本页，重新进「从教务系统导入」，再试一次</text>
+      <text class="error-step">2. 手机浏览器里的教务系统请先退出，避免会话互斥</text>
+      <text class="error-step">3. 如果每次都这样，试一下切换网络：4G 与 Wi-Fi 互换</text>
+    </view>
+    <view wx:if="{{errorKind === 'PARAMS_LOST'}}" class="error-steps">
+      <text class="error-step">1. 这不是密码问题：教务系统这次一个表单字段都没收到</text>
+      <text class="error-step">2. 退出本页，重新进「从教务系统导入」，再试一次</text>
+      <text class="error-step">3. 仍然这样就把诊断信息发给开发者</text>
+    </view>
+    <view wx:if="{{errorKind === 'INVALID_CREDENTIALS'}}" class="error-steps">
+      <text class="error-step">1. 先在电脑浏览器「无痕窗口」登录一次教务，确认现在能不能登上</text>
+      <text class="error-step">2. 一天内失败 5 次会锁定 30 分钟，锁定期间密码正确也报这句</text>
+      <text class="error-step">3. 确认能登上之后，回来再导入一次</text>
+    </view>
+    <view wx:if="{{diagnostics.length}}" class="diag-toggle" bindtap="toggleDiagnostics">
+      {{showDiagnostics ? '收起诊断信息' : '查看诊断信息（排查用）'}}
+    </view>
+    <view wx:if="{{showDiagnostics}}" class="diag-body">
+      <text wx:for="{{diagnostics}}" wx:key="*this" class="diag-line">{{item}}</text>
+    </view>
+  </view>
+
+  <view wx:if="{{preview}}" class="preview-card">
+    <view class="preview-head">
+      <view>
+        <view class="preview-title">识别到 {{preview.blocks}} 个课程时间段</view>
+        <view class="preview-sub">{{preview.term}} · 共 {{preview.distinct}} 门课 · {{preview.totalWeeks}} 周</view>
+      </view>
+    </view>
+
+    <scroll-view class="preview-list" scroll-y>
+      <view wx:for="{{preview.items}}" wx:key="key" class="preview-item">
+        <view class="preview-dot" style="background:{{item.color}}"></view>
+        <view class="preview-main">
+          <view class="preview-name">{{item.name}}</view>
+          <view class="preview-meta">{{item.meta}}</view>
+          <view wx:if="{{item.room || item.teacher}}" class="preview-meta light">{{item.room}}{{item.room && item.teacher ? ' · ' : ''}}{{item.teacher}}</view>
+        </view>
+      </view>
+      <view wx:if="{{previewMore > 0}}" class="preview-more">还有 {{previewMore}} 个时间段未展示</view>
+    </scroll-view>
+
+    <view class="preview-actions">
+      <button class="primary-button" bindtap="replaceAll" disabled="{{saving}}">替换现有课表</button>
+      <button class="secondary-button" bindtap="appendToExisting" disabled="{{saving}}">追加到现有课表</button>
+      <button class="ghost-button" bindtap="cancelPreview" disabled="{{saving}}">取消</button>
+    </view>
+  </view>
+
+  <view wx:if="{{!preview}}" class="tips">
+    <view class="tips-title">导入前请确认</view>
+    <view class="tip">· 教务系统地址：jwglxt.buct.edu.cn（学校内网、外网都可访问）</view>
+    <view class="tip">· 请先在浏览器里确认能正常登录，再回到小程序导入</view>
+    <view class="tip">· 导入只读取课表，不会修改教务系统里的任何数据</view>
+    <view class="tip" bindtap="openManual">· 想手动添加单门课程，点这里</view>
+  </view>
+</view>

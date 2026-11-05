@@ -1,0 +1,19 @@
+<view class="page-shell">
+  <view class="notes-head">
+    <view><view class="page-title">记事</view><view class="page-subtitle">课程待办与校园生活记录</view></view>
+    <button class="add-note" bindtap="addNote">＋</button>
+  </view>
+  <view wx:if="{{!notes.length}}" class="card empty">
+    <view class="empty-mark">✓</view><view>还没有记事</view><view class="empty-copy">把作业、考试和临时想法记在这里</view>
+  </view>
+  <view wx:else class="card">
+    <view wx:for="{{notes}}" wx:key="id" class="note-row {{item.done ? 'done' : ''}}">
+      <view class="check" data-id="{{item.id}}" bindtap="toggleDone">{{item.done ? '✓' : ''}}</view>
+      <view class="note-main" data-id="{{item.id}}" bindtap="editNote">
+        <view class="note-title">{{item.title}}</view><view class="note-copy">{{item.content || '无补充内容'}}</view>
+        <view wx:if="{{item.remindAt}}" class="note-time">{{item.remindAt}}</view>
+      </view>
+      <view class="remove" data-id="{{item.id}}" bindtap="removeNote">删除</view>
+    </view>
+  </view>
+</view>

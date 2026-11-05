@@ -1,0 +1,77 @@
+<view class="form-page safe-bottom">
+  <view class="form-card">
+    <view class="field">
+      <text class="label">课程名称</text>
+      <input value="{{draft.name}}" data-field="name" bindinput="updateField" maxlength="30" placeholder="如：高等数学" />
+    </view>
+
+    <view class="two-column">
+      <view class="field">
+        <text class="label">星期</text>
+        <picker range="{{dayNames}}" value="{{dayIndex}}" bindchange="changeDay">
+          <view class="picker-value">{{dayNames[dayIndex]}} <text>⌄</text></view>
+        </picker>
+      </view>
+      <view class="field">
+        <text class="label">教师</text>
+        <input value="{{draft.teacher}}" data-field="teacher" bindinput="updateField" maxlength="20" placeholder="选填" />
+      </view>
+      <view class="field">
+        <text class="label">开始节次</text>
+        <picker range="{{periodChoices}}" value="{{startIndex}}" bindchange="changeStart">
+          <view class="picker-value">{{periodChoices[startIndex]}} <text>⌄</text></view>
+        </picker>
+      </view>
+      <view class="field">
+        <text class="label">结束节次</text>
+        <picker range="{{periodChoices}}" value="{{endIndex}}" bindchange="changeEnd">
+          <view class="picker-value">{{periodChoices[endIndex]}} <text>⌄</text></view>
+        </picker>
+      </view>
+    </view>
+
+    <view class="field">
+      <text class="label">上课地点</text>
+      <input value="{{draft.room}}" data-field="room" bindinput="updateField" maxlength="30" placeholder="如：教A-203" />
+    </view>
+
+    <view class="field">
+      <view class="label-row">
+        <text class="label">上课周次</text>
+        <view><text bindtap="selectAllWeeks">全选</text><text bindtap="clearWeeks">清空</text></view>
+      </view>
+      <view class="week-grid">
+        <view
+          wx:for="{{weekOptions}}"
+          wx:key="value"
+          class="week-pill {{item.selected ? 'selected' : ''}}"
+          data-week="{{item.value}}"
+          bindtap="toggleWeek"
+        >{{item.value}}</view>
+      </view>
+    </view>
+
+    <view class="field">
+      <text class="label">课程颜色</text>
+      <view class="color-grid">
+        <view
+          wx:for="{{colors}}"
+          wx:key="*this"
+          class="color-dot {{index === draft.colorIndex ? 'selected' : ''}}"
+          style="background:{{item}}"
+          data-index="{{index}}"
+          bindtap="chooseColor"
+        ></view>
+      </view>
+    </view>
+
+    <view class="field last-field">
+      <text class="label">备注</text>
+      <textarea value="{{draft.note}}" data-field="note" bindinput="updateField" maxlength="120" placeholder="选填" auto-height></textarea>
+    </view>
+  </view>
+
+  <button class="primary-button" bindtap="save">保存课程</button>
+  <button wx:if="{{isEditing}}" class="danger-button delete-button" bindtap="remove">删除课程</button>
+</view>
+

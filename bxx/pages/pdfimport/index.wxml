@@ -1,0 +1,79 @@
+<view class="import-page">
+  <view class="mode-switch">
+    <view class="mode-item" bindtap="openJwImport">教务系统导入</view>
+    <view class="mode-item active">PDF 导入</view>
+  </view>
+
+  <view class="hero">
+    <view class="hero-title">从 PDF 导入课表</view>
+    <view class="hero-copy">选择学校课表页导出的 PDF，自动识别课程、上课时间、教室和教师，不用一门一门手动添加。</view>
+    <view class="privacy-note">
+      <text class="privacy-mark">隐私</text>
+      <text class="privacy-text">文件只在本机解析，不联网、不上传、不保存，解析后立即释放。不需要学号和密码。</text>
+    </view>
+  </view>
+
+  <view class="form-card">
+    <view class="field">
+      <text class="field-label">课表文件</text>
+      <view class="file-row">
+        <view class="file-info">
+          <view class="file-name">{{fileName || '还没有选择文件'}}</view>
+          <view class="file-meta">{{fileSizeText || '支持学校课表页「输出 PDF」导出的文件'}}</view>
+        </view>
+        <text class="file-action" bindtap="choosePdf">{{fileName ? '重选' : '选择'}}</text>
+      </view>
+    </view>
+
+    <button class="primary-button import-button" bindtap="choosePdf" disabled="{{loading}}">
+      {{loading ? loadingText : '选择 PDF 并导入'}}
+    </button>
+  </view>
+
+  <view wx:if="{{error}}" class="error-card">
+    <view class="error-title">导入没有完成</view>
+    <view class="error-copy">{{error}}</view>
+    <view wx:if="{{errorHint.length}}" class="error-steps">
+      <text wx:for="{{errorHint}}" wx:key="*this" class="error-step">{{index + 1}}. {{item}}</text>
+    </view>
+    <view class="error-retry" bindtap="choosePdf">重新选择文件</view>
+  </view>
+
+  <view wx:if="{{preview}}" class="preview-card">
+    <view class="preview-head">
+      <view>
+        <view class="preview-title">识别到 {{preview.blocks}} 个课程时间段</view>
+        <view class="preview-sub">{{preview.term}} · 共 {{preview.distinct}} 门课 · {{preview.totalWeeks}} 周</view>
+      </view>
+    </view>
+
+    <view wx:if="{{previewWarning}}" class="preview-warn">{{previewWarning}}</view>
+
+    <scroll-view class="preview-list" scroll-y>
+      <view wx:for="{{preview.items}}" wx:key="key" class="preview-item">
+        <view class="preview-dot" style="background:{{item.color}}"></view>
+        <view class="preview-main">
+          <view class="preview-name">{{item.name}}</view>
+          <view class="preview-meta">{{item.meta}}</view>
+          <view wx:if="{{item.room || item.teacher}}" class="preview-meta light">{{item.room}}{{item.room && item.teacher ? ' · ' : ''}}{{item.teacher}}</view>
+        </view>
+      </view>
+      <view wx:if="{{previewMore > 0}}" class="preview-more">还有 {{previewMore}} 个时间段未展示</view>
+    </scroll-view>
+
+    <view class="preview-actions">
+      <button class="primary-button" bindtap="replaceAll" disabled="{{saving}}">替换现有课表</button>
+      <button class="secondary-button" bindtap="appendToExisting" disabled="{{saving}}">追加到现有课表</button>
+      <button class="ghost-button" bindtap="cancelPreview" disabled="{{saving}}">取消</button>
+    </view>
+  </view>
+
+  <view wx:if="{{!preview}}" class="tips">
+    <view class="tips-title">导入前请确认</view>
+    <view class="tip">· PDF 解析组件：{{moduleStatus}}</view>
+    <view class="tip">· 学校课表页 → 信息查询 → 学生课表查询 →「输出 PDF」</view>
+    <view class="tip">· 把 PDF 发到微信（「文件传输助手」即可），再回到这里选择</view>
+    <view class="tip">· 全程在本机解析，不会修改学校系统里的任何数据</view>
+    <view class="tip" bindtap="openManual">· 想手动添加单门课程，点这里</view>
+  </view>
+</view>

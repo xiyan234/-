@@ -1,0 +1,48 @@
+<view class="settings-page safe-bottom">
+  <view class="section">
+    <view class="section-title">学期</view>
+    <view class="setting-row vertical">
+      <text>课表名称</text>
+      <input value="{{settings.timetableName}}" bindinput="updateName" maxlength="30" />
+    </view>
+    <picker mode="date" value="{{settings.semesterStartMonday}}" bindchange="updateStartDate">
+      <view class="setting-row">
+        <view><text>第一周周一</text><text class="hint">用于计算当前周和表头日期</text></view>
+        <text class="value">{{settings.semesterStartMonday}} ›</text>
+      </view>
+    </picker>
+    <picker range="{{totalWeekOptions}}" value="{{totalWeekIndex}}" bindchange="updateTotalWeeks">
+      <view class="setting-row">
+        <text>学期总周数</text>
+        <text class="value">{{settings.totalWeeks}} 周 ›</text>
+      </view>
+    </picker>
+    <view class="setting-row">
+      <view><text>显示周末</text><text class="hint">关闭后仅显示周一至周五</text></view>
+      <switch checked="{{settings.showWeekend}}" color="#2e5aac" bindchange="toggleWeekend" />
+    </view>
+  </view>
+
+  <view class="section">
+    <view class="section-heading">
+      <view><view class="section-title">节次时间</view><text class="section-copy">共 {{settings.periodTimes.length}} 节</text></view>
+      <text class="text-button" bindtap="restorePeriodTimes">恢复默认</text>
+    </view>
+    <view wx:for="{{settings.periodTimes}}" wx:key="period" class="period-row">
+      <text class="period-label">第 {{item.period}} 节</text>
+      <input value="{{item.start}}" data-index="{{index}}" data-field="start" bindinput="updatePeriod" maxlength="5" />
+      <text>—</text>
+      <input value="{{item.end}}" data-index="{{index}}" data-field="end" bindinput="updatePeriod" maxlength="5" />
+    </view>
+  </view>
+
+  <button class="primary-button" bindtap="save">保存设置</button>
+
+  <view class="section data-section">
+    <view class="section-title">本机数据</view>
+    <view class="data-row" bindtap="resetDemo"><text>恢复示例课表</text><text>›</text></view>
+    <view class="data-row danger" bindtap="clearCourses"><text>清空全部课程</text><text>›</text></view>
+    <view class="privacy-copy">课程与设置只保存在微信本地缓存，不会上传到服务器。</view>
+  </view>
+</view>
+

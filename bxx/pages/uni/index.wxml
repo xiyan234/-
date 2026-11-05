@@ -1,0 +1,31 @@
+<view class="uni-page">
+  <view class="uni-head">
+    <view><view class="uni-brand"><image class="brand-logo" src="/assets/logo.png" mode="aspectFill"></image><text class="brand-name">小鸮</text></view><view class="uni-copy">本机校园助手</view></view>
+    <button class="history-button" bindtap="showHistory">历史</button>
+  </view>
+  <scroll-view class="messages" scroll-y scroll-into-view="message-end">
+    <view wx:if="{{!messages.length}}" class="welcome">
+      <image class="welcome-logo" src="/assets/logo.png" mode="aspectFill"></image><view class="welcome-title">你好，我是小鸮</view>
+      <view class="welcome-copy">问问课程安排、记事用法或校园服务。</view>
+    </view>
+    <view wx:for="{{messages}}" wx:key="id" class="message {{item.role}}"><view class="bubble">{{item.text}}</view></view>
+    <view id="message-end"></view>
+  </scroll-view>
+  <view wx:if="{{keyboardHint}}" class="voice-hint">{{keyboardHint}}</view>
+  <view class="composer">
+    <button class="voice" bindtap="openKeyboardVoice">⌁</button>
+    <input value="{{text}}" bindinput="updateText" bindfocus="openKeyboardVoice" confirm-type="send" bindconfirm="send" placeholder="和小鸮说点什么…" />
+    <button class="send" bindtap="send" disabled="{{!text}}">发送</button>
+  </view>
+</view>
+
+<view wx:if="{{historyOpen}}" class="mask" bindtap="hideHistory">
+  <view class="history-sheet" catchtap="noop">
+    <view class="sheet-head"><text>历史记录</text><text class="close" bindtap="hideHistory">完成</text></view>
+    <scroll-view class="history-list" scroll-y>
+      <view wx:if="{{!messages.length}}" class="empty">暂无历史记录</view>
+      <view wx:for="{{messages}}" wx:key="id" class="history-row"><text>{{item.role === 'user' ? '你' : '小鸮'}}</text><view>{{item.text}}</view></view>
+    </scroll-view>
+    <button wx:if="{{messages.length}}" class="clear" bindtap="clearHistory">清空历史记录</button>
+  </view>
+</view>

@@ -1,0 +1,37 @@
+{
+  "pages": [
+    "pages/timetable/index",
+    "pages/notes/index",
+    "pages/uni/index",
+    "pages/campus/index",
+    "pages/me/index",
+    "pages/course/edit",
+    "pages/note/edit",
+    "pages/settings/index",
+    "pages/import/index",
+    "pages/pdfimport/index"
+  ],
+  "window": {
+    "navigationBarTitleText": "百小鸮",
+    "navigationBarBackgroundColor": "#f2f2f7",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#f2f2f7",
+    "backgroundTextStyle": "light"
+  },
+  "tabBar": {
+    "color": "#8e8e93",
+    "selectedColor": "#007aff",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "list": [
+      { "pagePath": "pages/timetable/index", "text": "课表" },
+      { "pagePath": "pages/notes/index", "text": "记事" },
+      { "pagePath": "pages/uni/index", "text": "小鸮" },
+      { "pagePath": "pages/campus/index", "text": "校园" },
+      { "pagePath": "pages/me/index", "text": "我的" }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}
+

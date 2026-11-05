@@ -1,0 +1,4 @@
+<view class="page-shell"><view class="page-title">校园服务</view><view class="page-subtitle">北京化工大学 · 首个落地高校</view>
+  <view class="service-grid"><view wx:for="{{services}}" wx:key="key" class="service-card" data-key="{{item.key}}" bindtap="open"><view class="service-mark">{{item.mark}}</view><view class="service-name">{{item.name}}</view><view class="service-copy">{{item.desc}}</view></view></view>
+  <view class="campus-note">受微信小程序业务域名限制，已配置的网页入口会复制网址；其余入口会在完成小程序适配后开放。</view>
+</view>

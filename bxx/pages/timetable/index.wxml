@@ -1,0 +1,124 @@
+<view class="page" bindtouchstart="rememberTouch" bindtouchend="finishTouch">
+  <view class="week-card">
+    <button class="week-arrow" bindtap="previousWeek" disabled="{{week <= 1}}">‹</button>
+    <view class="week-center" bindtap="openWeekPicker">
+      <view class="week-heading">第 {{week}} 周 <text class="week-range">{{weekTitle}}</text></view>
+      <view class="semester">{{settings.timetableName}} · 共 {{settings.totalWeeks}} 周</view>
+    </view>
+    <button class="week-arrow" bindtap="nextWeek" disabled="{{week >= settings.totalWeeks}}">›</button>
+  </view>
+
+  <view class="week-tools">
+    <text>左右滑动切换周次</text>
+    <text wx:if="{{week !== currentWeek}}" class="back-current" bindtap="goCurrentWeek">回到本周</text>
+  </view>
+
+  <view class="import-bar" bindtap="openImport">
+    <text class="import-bar-icon">⇩</text>
+    <text class="import-bar-text">导入课表</text>
+    <text class="chevron">›</text>
+  </view>
+
+  <view wx:if="{{nextCourse}}" class="next-card" data-id="{{nextCourse.id}}" bindtap="showCourse">
+    <view class="next-dot" style="background:{{nextCourse.color}}"></view>
+    <view class="next-content">
+      <view class="next-title">{{nextCourse.name}} <text>{{nextCourse.countdown}}</text></view>
+      <view class="next-meta">{{nextCourse.dayLabel}} · 第 {{nextCourse.startPeriod}}–{{nextCourse.endPeriod}} 节 {{nextCourse.timeText}} · {{nextCourse.room}}</view>
+    </view>
+    <text class="chevron">›</text>
+  </view>
+
+  <view wx:if="{{!hasCourses}}" class="empty-state">
+    <view class="empty-icon">课</view>
+    <view class="empty-title">还没有课程</view>
+    <view class="empty-copy">添加第一门课，开始安排你的学期。</view>
+    <button class="primary-button empty-button" bindtap="addCourse">添加课程</button>
+    <button class="secondary-button empty-button" bindtap="openImport">导入课表</button>
+  </view>
+
+  <view wx:else class="timetable-card">
+    <view class="table-head">
+      <view class="period-head">节次</view>
+      <view
+        wx:for="{{dayColumns}}"
+        wx:key="dayIndex"
+        class="day-head {{item.isToday ? 'today' : ''}}"
+      >
+        <view>{{item.label}}</view>
+        <text>{{item.date}}</text>
+      </view>
+    </view>
+    <view class="table-body">
+      <view class="period-column">
+        <view
+          wx:for="{{periodRows}}"
+          wx:key="period"
+          class="period-cell {{item.active ? 'active' : ''}}"
+        >
+          <text class="period-number">{{item.period}}</text>
+          <text>{{item.start}}</text>
+          <text>{{item.end}}</text>
+        </view>
+      </view>
+      <view
+        wx:for="{{dayColumns}}"
+        wx:key="dayIndex"
+        wx:for-item="day"
+        class="day-column {{day.isToday ? 'today-column' : ''}}"
+      >
+        <view wx:for="{{periodRows}}" wx:key="period" class="grid-cell"></view>
+        <view
+          wx:for="{{day.blocks}}"
+          wx:key="id"
+          wx:for-item="course"
+          class="course-block {{course.isNow ? 'is-now' : ''}}"
+          style="{{course.style}}"
+          data-id="{{course.id}}"
+          catchtap="showCourse"
+        >
+          <view class="course-name">{{course.name}}</view>
+          <view class="course-room">{{course.room}}</view>
+          <view class="course-time">{{course.timeText}}</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="floating-actions">
+    <view class="circle-button settings-button" bindtap="openSettings" aria-role="button" aria-label="课表设置">⚙</view>
+    <view class="circle-button add-button" bindtap="addCourse" aria-role="button" aria-label="添加课程">＋</view>
+  </view>
+</view>
+
+<view wx:if="{{showWeekPicker}}" class="mask" bindtap="closeWeekPicker">
+  <view class="sheet safe-bottom" catchtap="stopPropagation">
+    <view class="sheet-title">选择周次</view>
+    <view class="week-grid">
+      <view
+        wx:for="{{weekOptions}}"
+        wx:key="value"
+        class="week-option {{item.active ? 'active' : ''}}"
+        data-week="{{item.value}}"
+        bindtap="selectWeek"
+      >{{item.value}}</view>
+    </view>
+    <button class="secondary-button" bindtap="goCurrentWeek">回到本周（第 {{currentWeek}} 周）</button>
+  </view>
+</view>
+
+<view wx:if="{{detail}}" class="mask" bindtap="closeDetail">
+  <view class="sheet detail-sheet safe-bottom" catchtap="stopPropagation">
+    <view class="detail-title">
+      <view class="detail-dot" style="background:{{detail.color}}"></view>
+      <text>{{detail.name}}</text>
+    </view>
+    <view class="detail-list">
+      <view class="detail-row"><text>时间</text><view>{{detail.dayText}} {{detail.periodText}}<text class="detail-subline">{{detail.timeText}}</text></view></view>
+      <view class="detail-row"><text>周次</text><view>{{detail.weeksText}}</view></view>
+      <view class="detail-row"><text>地点</text><view>{{detail.room || '未填写'}}</view></view>
+      <view class="detail-row"><text>教师</text><view>{{detail.teacher || '未填写'}}</view></view>
+      <view class="detail-row"><text>备注</text><view>{{detail.note || '无'}}</view></view>
+    </view>
+    <button class="primary-button" bindtap="editCourse">编辑课程</button>
+  </view>
+</view>

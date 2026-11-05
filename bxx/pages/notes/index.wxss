@@ -1,0 +1,13 @@
+.notes-head { display: flex; align-items: flex-start; justify-content: space-between; }
+.add-note { width: 72rpx; height: 72rpx; margin: 4rpx 0 0; padding: 0; border-radius: 22rpx; background: #fff; color: var(--brand); font-size: 43rpx; line-height: 70rpx; }
+.note-row { display: flex; align-items: center; min-height: 126rpx; padding: 18rpx 22rpx; border-bottom: 1rpx solid var(--line); }
+.note-row:last-child { border-bottom: 0; }
+.check { width: 42rpx; height: 42rpx; flex: none; border: 3rpx solid var(--brand); border-radius: 50%; color: #fff; background: #fff; line-height: 38rpx; text-align: center; }
+.done .check { background: var(--brand); }
+.note-main { flex: 1; min-width: 0; padding: 0 18rpx; }
+.note-title { overflow: hidden; font-size: 29rpx; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.done .note-title { color: var(--muted); text-decoration: line-through; }
+.note-copy { margin-top: 6rpx; overflow: hidden; color: var(--muted); font-size: 23rpx; text-overflow: ellipsis; white-space: nowrap; }
+.note-time { margin-top: 6rpx; color: var(--brand); font-size: 21rpx; }
+.remove { padding: 18rpx 4rpx; color: var(--danger); font-size: 23rpx; }
+.empty-copy { margin-top: 12rpx; font-size: 23rpx; }
